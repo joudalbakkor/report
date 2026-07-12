@@ -22,6 +22,8 @@ export function StatCard({
   accent = "hsl(var(--primary))",
 }: StatCardProps) {
   const positive = (trend ?? 0) >= 0
+  // Legacy hsla() (not color-mix) so html2canvas can parse it during PDF export.
+  const tint = accent.replace(/^hsl\(/, "hsla(").replace(/\)$/, ", 0.15)")
   return (
     <Card>
       <CardContent className="p-5">
@@ -32,7 +34,7 @@ export function StatCard({
           </div>
           <div
             className="flex h-11 w-11 items-center justify-center rounded-xl"
-            style={{ backgroundColor: `color-mix(in srgb, ${accent} 15%, transparent)` }}
+            style={{ backgroundColor: tint }}
           >
             <Icon className="h-5 w-5" style={{ color: accent }} />
           </div>
