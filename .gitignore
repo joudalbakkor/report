@@ -47,10 +47,10 @@ out/
 *.local
 
 # ---------- Testing (Playwright) ----------
-/test-results/
-/playwright-report/
-/playwright/.cache/
-/blob-report/
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
 e2e-out/
 
 # ---------- Databases ----------
