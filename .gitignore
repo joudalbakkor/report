@@ -51,6 +51,7 @@ out/
 /playwright-report/
 /playwright/.cache/
 /blob-report/
+e2e-out/
 
 # ---------- Databases ----------
 *.sqlite3
