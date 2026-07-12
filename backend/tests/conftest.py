@@ -35,3 +35,22 @@ def client():
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def db_session():
+    """A raw SQLAlchemy session on a fresh in-memory database (service tests)."""
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    Base.metadata.create_all(bind=engine)
+    TestingSession = sessionmaker(
+        bind=engine, autoflush=False, autocommit=False
+    )
+    db = TestingSession()
+    try:
+        yield db
+    finally:
+        db.close()
