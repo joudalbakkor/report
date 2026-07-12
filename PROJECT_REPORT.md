@@ -1,168 +1,146 @@
-# 📊 تقرير المشروع — Report Generator
+# 📊 التقرير النهائي للمشروع — مولّد التقارير (Report Generator)
 
-> يُحدَّث بعد كل جلسة. آخر تحديث: 2026-07-12 (المرحلة 5)
-
-## نظرة عامة
-مولّد تقارير احترافي. Stack: **FastAPI + React + Shadcn/ui + TailwindCSS**.
-- Repo: https://github.com/joudalbakkor/report (public)
-- فرع التطوير: `develop`
-- تشغيل كامل: شغّل الـ backend (`uvicorn app.main:app` على 8000) ثم الـ frontend (`npm run dev`).
+> آخر تحديث: 2026-07-12 · الحالة: **مكتمل** ✅ · الريبو: <https://github.com/joudalbakkor/report>
 
 ---
 
-## ✅ المرحلة 1 — إنشاء الـ Repository
-- إنشاء ريبو عام `report` على GitHub.
-- الفروع: `main` (إنتاج) + `develop` (تطوير).
-- ملفات: `CLAUDE.md`، `.gitignore` شامل.
-- Initial commit مرفوع على `develop`.
+## 1) نظرة عامة
 
-## ✅ المرحلة 2 — Backend الأساسي
-هيكلية FastAPI احترافية داخل `backend/`:
+**مولّد التقارير** هو لوحة أعمال (Business Dashboard) احترافية تعرض تقارير تحليلية
+للمبيعات والمشتريات والعملاء والمنتجات، بواجهة عربية كاملة (RTL) مع وضع فاتح/داكن
+وتصدير إلى Excel و PDF. بُني على مدى 6 مراحل متتابعة.
 
-```
-backend/
-├── app/
-│   ├── api/        # crud_router factory + routes aggregation
-│   ├── core/       # config
-│   ├── db/         # base + session
-│   ├── models/     # Customer, Product, Sale, Purchase, Expense
-│   ├── schemas/    # Pydantic (Create/Update/Read لكل كيان)
-│   ├── services/   # CRUDService عام
-│   └── main.py     # تطبيق FastAPI (CORS + /docs + /health)
-├── tests/          # pytest (6 اختبارات)
-├── requirements.txt
-├── .env.example
-└── seed_data.py
-```
+- **Frontend:** React 19 + TypeScript + Vite + TailwindCSS + shadcn/ui + Recharts
+- **Backend:** FastAPI + SQLAlchemy 2.0 + Pydantic v2 (قاعدة بيانات SQLite)
+- **الفروع:** `main` (إنتاج) · `develop` (تطوير)
 
-**قاعدة البيانات:** SQLite + SQLAlchemy 2.0 (نمط `Mapped`).
+---
 
-**Endpoints:** CRUD كامل تحت `/api/v1` لكل من:
-`customers`, `products`, `sales`, `purchases`, `expenses`
-(list / get / create / update / delete) + `/` و `/health`.
+## 2) الميزات المُنفّذة
 
-**Seed data (بيانات واقعية عربية):**
-| الكيان | العدد |
-|--------|------|
-| customers | 150 |
-| products | 32 |
-| sales | 1200 |
-| purchases | 600 |
-| expenses | 300 |
+| الميزة | الحالة |
+|--------|:------:|
+| لوحة تحكم بمؤشرات أداء ورسوم بيانية | ✓ |
+| تقرير المبيعات (رسوم + جدول + فلترة) | ✓ |
+| تقرير المشتريات | ✓ |
+| تقرير العملاء | ✓ |
+| تقرير المنتجات (مع تنبيه المخزون المنخفض) | ✓ |
+| بحث وفلترة لحظية في الجداول | ✓ |
+| وضع فاتح/داكن/تلقائي (localStorage) | ✓ |
+| تصميم متجاوب (Responsive) + RTL عربي | ✓ |
+| تصدير Excel (SheetJS) | ✓ |
+| تصدير PDF مع نص عربي صحيح | ✓ |
+| REST API كامل (CRUD) لكل الكيانات | ✓ |
+| بيانات واقعية مُولّدة (Seed) | ✓ |
+| اختبارات Backend (تغطية 100%) | ✓ |
+| اختبارات واجهة (Playwright) | ✓ |
+| مصادقة/صلاحيات المستخدمين | ✗ (خارج النطاق الحالي) |
+| قاعدة بيانات إنتاجية (PostgreSQL) + Alembic | 🔄 (مقترح مستقبلي) |
 
-**الاختبارات:** 6/6 ناجحة (meta + CRUD + العلاقات + تعارض SKU + فحص التحقق).
+## 3) إحصائيات الكود
 
-**تشغيل محلي:**
-```bash
-cd backend
-python -m venv .venv && .venv\Scripts\activate    # Windows
-pip install -r requirements.txt
-python seed_data.py          # توليد البيانات
-uvicorn app.main:app --reload
-# التوثيق التفاعلي: http://127.0.0.1:8000/docs
-```
+| الفئة | الملفات | الأسطر |
+|-------|:------:|:------:|
+| Backend (Python) | 30 | 1,184 |
+| Frontend (TS/TSX) | 33 | 2,731 |
+| Styles (CSS) | 2 | 269 |
+| اختبارات E2E (JS/TS) | 9 | 381 |
+| ملفات الإعداد | 8 | 208 |
+| **الإجمالي** | **82** | **4,773** |
 
-### Commits (المرحلة 2)
-- `feat: add FastAPI backend with database models, schemas and CRUD endpoints`
-- `feat: add realistic seed data generator`
-- `test: add backend API tests`
+## 4) نتائج الاختبارات
 
-## ✅ المرحلة 3 — Frontend + الواجهات
-واجهة احترافية بـ **React 19 + TypeScript + Vite + TailwindCSS + shadcn/ui** داخل `frontend/`:
+### Backend — Pytest + Coverage
+- **31 اختباراً — كلها ناجحة ✅**
+- **التغطية: 100%** (المطلوب 80%+) — مفروضة عبر `--cov-fail-under=80` في `pytest.ini`.
+- تشمل: كل نقاط النهاية (CRUD مُعامَل لكل الكيانات الخمسة)، حالات 404/422،
+  خدمة `CRUDService`، ودالة `get_db`.
 
-```
-frontend/src/
-├── components/
-│   ├── ui/          # مكوّنات shadcn (button, card, table, select, tabs, ...)
-│   ├── layout/      # sidebar, header, app-layout (responsive + drawer للجوال)
-│   ├── charts.tsx   # Recharts (area, bar, donut)
-│   ├── data-table.tsx  # جدول ببحث + ترقيم صفحات
-│   ├── export-buttons.tsx  # تصدير PDF/Excel
-│   ├── stat-card.tsx / states.tsx / theme-*.tsx
-├── pages/           # dashboard, sales, purchases, customers, products, settings
-├── lib/             # api (client + types), format (عربي), analytics, utils
-└── hooks/use-async.ts
-```
-
-**المميزات:**
-- لوحة تحكم + 4 صفحات تقارير (مبيعات، مشتريات، عملاء، منتجات) + إعدادات.
-- رسوم بيانية (Recharts): مساحية، أعمدة، دائرية (Donut).
-- جداول مع **بحث + فلاتر** (Select) + ترقيم صفحات.
-- **Dark/Light/System Mode** (محفوظ في localStorage).
-- **Responsive** كامل + دعم **RTL** عربي (خط Cairo).
-- تصدير **Excel** (SheetJS) و**PDF** — الأخير عبر `html2canvas + jsPDF`
-  (يلتقط DOM الذي يشكّله المتصفح) لضمان **ظهور النص العربي بشكل صحيح** في الـ PDF.
-- طبقة API مع Vite proxy إلى الـ Backend + حالات تحميل/خطأ.
-
-**التحقق:**
-- `npm run build` ينجح (tsc صارم + Vite، 2640 وحدة، بلا أخطاء).
-- تشغيل مزدوج: Backend (8000) + Frontend dev (5173) — الواجهة تُخدَم و**بروكسي الـ API يُرجع بيانات البذور فعلياً**.
-
-**تشغيل محلي:**
-```bash
-cd frontend
-npm install
-npm run dev            # http://localhost:5173  (يتطلب تشغيل الـ backend على 8000)
-```
-
-### Commits (المرحلة 3)
-- `feat: scaffold frontend tooling (Vite + React-TS + Tailwind + shadcn/ui + theming)`
-- `feat: add app layout, API client, charts, data table and PDF/Excel export`
-- `feat: add dashboard and report pages with charts, filters and exports`
-
-## ✅ المرحلة 4 — ربط Frontend بـ Backend + تحقق فعلي
-- عميل API منظّم في **`frontend/src/services/api.ts`** (دوال لكل endpoint + `fetchAll` مع ترقيم صفحات + `ApiError`).
-- كل الصفحات مربوطة فعلياً بالـ Backend عبر Vite proxy، مع حالات تحميل/خطأ.
-- إصلاح تصدير PDF: استبدال `color-mix()` بـ `hsla()` القديمة لأن `html2canvas` لا يدعم دوال الألوان الحديثة.
-
-**تحقق آلي بمتصفح حقيقي (Playwright + Chromium) — 7/7 ناجحة:**
-| الفحص | النتيجة |
-|-------|---------|
-| عرض بيانات لوحة التحكم | ✅ الإيرادات ٤٢٬٧١٦٬٢٩٧ ر.س. |
-| جدول المبيعات يعرض صفوفاً | ✅ |
-| البحث النصّي | ✅ 1200 → 21 سجل |
-| فلتر الفئة (Select) | ✅ → 179 سجل (أثاث مكتبي) |
-| تصدير Excel | ✅ `تقرير-المنتجات.xlsx` |
-| تصدير PDF | ✅ `تقرير-المنتجات.pdf` |
+### Frontend — Playwright + تحقق فعلي بمتصفح حقيقي (7/7)
+| السيناريو | النتيجة |
+|-----------|:------:|
+| تحميل لوحة التحكم (بيانات + رسوم) | ✅ |
+| بحث نصّي في المبيعات | ✅ (1200 → 21 سجل) |
+| فلتر الفئة (Select) | ✅ (→ 179 سجل) |
+| تصدير Excel | ✅ ملف `.xlsx` بمحتوى عربي صحيح |
+| تصدير PDF | ✅ ملف `.pdf` بنص عربي متصل RTL |
 | الوضع الداكن | ✅ |
 
-**التأكد من العربية في الملفات المصدَّرة (فحص فعلي للملفات):**
-- **Excel**: قُرئت خلايا الملف — العناوين والقيم عربية صحيحة (`المنتج، الفئة، جهاز لابتوب، إلكترونيات`...) في 32 صفاً.
-- **PDF**: صُيّرت الصفحة الأولى إلى صورة وفُحصت بصرياً — **النص العربي متصل وصحيح واتجاهه RTL** في البطاقات والرسوم والجدول.
+> ملاحظة: `npx playwright test` قد يقتل الطرفية على Windows (خلل في إدارة webServer
+> لمجموعة عمليات الطرفية). للتشغيل: استخدم `PW_NO_SERVER=1` مع تشغيل الخوادم يدوياً،
+> أو السكربت المستقل `node frontend/e2e/run-screens.mjs` / `verify.mjs`.
 
-**تشغيل التحقق:** شغّل backend (8000) + frontend (5173) ثم:
+## 5) أمثلة على التقارير (لقطات الشاشة)
+
+جميع اللقطات في `docs/screenshots/`:
+
+| # | الصفحة | الملف |
+|---|--------|-------|
+| 1 | لوحة التحكم (فاتح) | `01-dashboard.png` |
+| 2 | تقرير المبيعات | `02-sales.png` |
+| 3 | تقرير المشتريات | `03-purchases.png` |
+| 4 | تقرير العملاء | `04-customers.png` |
+| 5 | تقرير المنتجات | `05-products.png` |
+| 6 | الإعدادات | `06-settings.png` |
+| 7 | لوحة التحكم (داكن) | `07-dashboard-dark.png` |
+
+![لوحة التحكم](docs/screenshots/01-dashboard.png)
+![تقرير المنتجات](docs/screenshots/05-products.png)
+
+## 6) البيانات المُولّدة (Seed Data)
+
+بيانات واقعية عربية (أسماء ومدن سعودية، فئات منتجات، موردون) عبر `backend/seed_data.py`
+ببذرة عشوائية ثابتة (`seed=42`) لضمان قابلية إعادة الإنتاج:
+
+| الكيان | العدد |
+|--------|:----:|
+| العملاء (Customers) | 150 |
+| المنتجات (Products) | 32 |
+| المبيعات (Sales) | **1,200** |
+| المشتريات (Purchases) | **600** |
+| المصروفات (Expenses) | 300 |
+
+## 7) التحديات والحلول
+
+| التحدّي | الحل |
+|---------|------|
+| **النص العربي في PDF** — مكتبات jsPDF تفصل الحروف العربية وتعكسها. | استخدام `html2canvas` لالتقاط الـ DOM بعد أن يُشكّله المتصفح، ثم إدراج الصورة في jsPDF → نص عربي متصل وصحيح. |
+| **`html2canvas` لا يدعم `color-mix()`** فتفشل صامتاً. | استبدال دوال الألوان الحديثة بـ `hsla()` القديمة. |
+| **Node مخفي على Windows** — ملف stub فارغ في System32 يحجب Node الحقيقي. | استخدام المسار الكامل / وضع `C:\Program Files\nodejs` في مقدمة PATH. |
+| **`playwright test` يقتل الطرفية** على Windows بسبب إدارة webServer. | جعل `webServer` اختيارياً (`PW_NO_SERVER`) + سكربتات تحقق مستقلة تدير دورة حياة الخوادم داخل Node. |
+| **تجاوز حدّ الترقيم** — 1200 مبيعة > حدّ 1000 للـ API. | دالة `fetchAll` تُرقّم الصفحات تلقائياً حتى جلب كل السجلات. |
+| **TypeScript صارم** (`verbatimModuleSyntax`, `types: [vite/client]`). | استيراد الأنواع صراحةً بـ `import type` بدل الاعتماد على نطاق React العام. |
+
+## 8) خطوات التشغيل
+
 ```bash
+# استنساخ
+git clone https://github.com/joudalbakkor/report.git && cd report
+
+# Backend
+cd backend
+python -m venv .venv && .venv\Scripts\activate     # Windows
+pip install -r requirements.txt
+python seed_data.py
+uvicorn app.main:app --reload                       # http://127.0.0.1:8000/docs
+
+# Frontend (نافذة أخرى)
 cd frontend
-OUT=./e2e-out node e2e/verify.mjs
+npm install
+npm run dev                                         # http://localhost:5173
 ```
 
-### Commits (المرحلة 4)
-- `refactor: move API client to services/api.ts with per-endpoint calls`
-- `fix: use hsla instead of color-mix so html2canvas renders Arabic PDF export`
-- `test: add Playwright e2e verification for data, filters and Arabic exports`
-
-## ✅ المرحلة 5 — الاختبارات
-### أ) Backend — Unit Tests (Pytest + coverage)
-- **31 اختباراً ناجحاً**، تغطية **100%** (المطلوب 80%+).
-- ملفات: `test_api.py`, `test_crud_endpoints.py` (CRUD مُعامَل لكل الكيانات الخمسة + 404/422)،
-  `test_services.py` (خدمة `CRUDService` + `get_db`).
-- إعداد `pytest.ini` يفرض `--cov-fail-under=80`. أُضيف `pytest-cov` إلى `requirements.txt`.
-- التشغيل: `cd backend && pytest`
-
-### ب) Frontend — UI Tests (Playwright)
-- 6 اختبارات في `frontend/e2e/*.spec.ts` + `playwright.config.ts`:
-  تحميل Dashboard · بحث المبيعات · فلتر الفئة · تصدير Excel · تصدير PDF · الوضع الداكن.
-- التشغيل: `cd frontend && npx playwright test`
-  (أو إن كان `runner` يقتل الطرفية على Windows: شغّل الخوادم يدوياً ثم `PW_NO_SERVER=1 npx playwright test`).
-
-**ملاحظة تحقّق:** سكربت التحقق `frontend/e2e/verify.mjs` (متصفح Chromium حقيقي) نُفِّذ ونجح **7/7**
-ويغطي نفس السيناريوهات (Dashboard، الفلترة، تصدير PDF/Excel مع فحص العربية فعلياً، الوضع الداكن).
-
-### Commits (المرحلة 5)
-- `test: add comprehensive backend unit tests (100% coverage)`
-- `test: add Playwright UI tests (dashboard, filtering, export, dark mode)`
+**الاختبارات:** `cd backend && pytest` · `cd frontend && npx playwright test`
 
 ---
 
-## ⏭️ التالي
-- المرحلة 6: (بانتظار التعليمات).
+## 9) سجل المراحل (Milestones)
+
+| المرحلة | الوصف | الحالة |
+|:------:|-------|:-----:|
+| 1 | إنشاء الـ Repository + الفروع | ✅ |
+| 2 | Backend الأساسي (Models, API, Seed) | ✅ |
+| 3 | Frontend + الواجهات | ✅ |
+| 4 | ربط Frontend بـ Backend + التصدير | ✅ |
+| 5 | الاختبارات (Pytest 100% + Playwright) | ✅ |
+| 6 | التقرير النهائي + التوثيق | ✅ |
