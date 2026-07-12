@@ -1,4 +1,8 @@
-/** Typed API client for the Report Generator backend. */
+/**
+ * Typed API client for the Report Generator backend.
+ *
+ * All calls go through the Vite dev proxy (`/api` -> FastAPI on :8000).
+ */
 
 const BASE_URL = "/api/v1"
 
@@ -53,16 +57,28 @@ export interface Expense {
   created_at: string
 }
 
+export class ApiError extends Error {
+  status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+    this.name = "ApiError"
+  }
+}
+
 async function getPage<T>(
   resource: string,
   skip: number,
   limit: number
 ): Promise<T[]> {
-  const res = await fetch(
-    `${BASE_URL}/${resource}/?skip=${skip}&limit=${limit}`
-  )
+  let res: Response
+  try {
+    res = await fetch(`${BASE_URL}/${resource}/?skip=${skip}&limit=${limit}`)
+  } catch {
+    throw new ApiError(0, "تعذّر الوصول إلى الخادم")
+  }
   if (!res.ok) {
-    throw new Error(`فشل الاتصال بالخادم (${res.status})`)
+    throw new ApiError(res.status, `فشل الاتصال بالخادم (${res.status})`)
   }
   return res.json()
 }
@@ -72,7 +88,6 @@ export async function fetchAll<T>(resource: string): Promise<T[]> {
   const limit = 1000
   let skip = 0
   const out: T[] = []
-  // Safety cap to avoid runaway loops.
   for (let i = 0; i < 100; i++) {
     const page = await getPage<T>(resource, skip, limit)
     out.push(...page)
@@ -82,10 +97,18 @@ export async function fetchAll<T>(resource: string): Promise<T[]> {
   return out
 }
 
+// --- Per-endpoint calls -----------------------------------------------------
+export const getCustomers = () => fetchAll<Customer>("customers")
+export const getProducts = () => fetchAll<Product>("products")
+export const getSales = () => fetchAll<Sale>("sales")
+export const getPurchases = () => fetchAll<Purchase>("purchases")
+export const getExpenses = () => fetchAll<Expense>("expenses")
+
+/** Convenience grouping used by the pages. */
 export const api = {
-  customers: () => fetchAll<Customer>("customers"),
-  products: () => fetchAll<Product>("products"),
-  sales: () => fetchAll<Sale>("sales"),
-  purchases: () => fetchAll<Purchase>("purchases"),
-  expenses: () => fetchAll<Expense>("expenses"),
+  customers: getCustomers,
+  products: getProducts,
+  sales: getSales,
+  purchases: getPurchases,
+  expenses: getExpenses,
 }

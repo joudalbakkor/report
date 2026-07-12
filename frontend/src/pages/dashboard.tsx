@@ -22,7 +22,7 @@ import {
   RevenueAreaChart,
 } from "@/components/charts"
 import { useAsync } from "@/hooks/use-async"
-import { api, type Product } from "@/lib/api"
+import { api, type Product } from "@/services/api"
 import {
   groupSum,
   monthlySeries,

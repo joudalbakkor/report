@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select"
 import { CategoryBarChart, CHART_COLORS, DonutChart } from "@/components/charts"
 import { useAsync } from "@/hooks/use-async"
-import { api } from "@/lib/api"
+import { api } from "@/services/api"
 import { groupCount, sumBy, topN } from "@/lib/analytics"
 import { formatCurrency, formatNumber } from "@/lib/format"
 

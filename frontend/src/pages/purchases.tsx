@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select"
 import { RevenueAreaChart, CHART_COLORS } from "@/components/charts"
 import { useAsync } from "@/hooks/use-async"
-import { api } from "@/lib/api"
+import { api } from "@/services/api"
 import { monthlySeries, sumBy } from "@/lib/analytics"
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format"
 
