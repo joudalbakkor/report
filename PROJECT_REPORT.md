@@ -1,6 +1,6 @@
 # 📊 تقرير المشروع — Report Generator
 
-> يُحدَّث بعد كل جلسة. آخر تحديث: 2026-07-11 (المرحلة 3)
+> يُحدَّث بعد كل جلسة. آخر تحديث: 2026-07-12 (المرحلة 4)
 
 ## نظرة عامة
 مولّد تقارير احترافي. Stack: **FastAPI + React + Shadcn/ui + TailwindCSS**.
@@ -110,7 +110,38 @@ npm run dev            # http://localhost:5173  (يتطلب تشغيل الـ ba
 - `feat: add app layout, API client, charts, data table and PDF/Excel export`
 - `feat: add dashboard and report pages with charts, filters and exports`
 
+## ✅ المرحلة 4 — ربط Frontend بـ Backend + تحقق فعلي
+- عميل API منظّم في **`frontend/src/services/api.ts`** (دوال لكل endpoint + `fetchAll` مع ترقيم صفحات + `ApiError`).
+- كل الصفحات مربوطة فعلياً بالـ Backend عبر Vite proxy، مع حالات تحميل/خطأ.
+- إصلاح تصدير PDF: استبدال `color-mix()` بـ `hsla()` القديمة لأن `html2canvas` لا يدعم دوال الألوان الحديثة.
+
+**تحقق آلي بمتصفح حقيقي (Playwright + Chromium) — 7/7 ناجحة:**
+| الفحص | النتيجة |
+|-------|---------|
+| عرض بيانات لوحة التحكم | ✅ الإيرادات ٤٢٬٧١٦٬٢٩٧ ر.س. |
+| جدول المبيعات يعرض صفوفاً | ✅ |
+| البحث النصّي | ✅ 1200 → 21 سجل |
+| فلتر الفئة (Select) | ✅ → 179 سجل (أثاث مكتبي) |
+| تصدير Excel | ✅ `تقرير-المنتجات.xlsx` |
+| تصدير PDF | ✅ `تقرير-المنتجات.pdf` |
+| الوضع الداكن | ✅ |
+
+**التأكد من العربية في الملفات المصدَّرة (فحص فعلي للملفات):**
+- **Excel**: قُرئت خلايا الملف — العناوين والقيم عربية صحيحة (`المنتج، الفئة، جهاز لابتوب، إلكترونيات`...) في 32 صفاً.
+- **PDF**: صُيّرت الصفحة الأولى إلى صورة وفُحصت بصرياً — **النص العربي متصل وصحيح واتجاهه RTL** في البطاقات والرسوم والجدول.
+
+**تشغيل التحقق:** شغّل backend (8000) + frontend (5173) ثم:
+```bash
+cd frontend
+OUT=./e2e-out node e2e/verify.mjs
+```
+
+### Commits (المرحلة 4)
+- `refactor: move API client to services/api.ts with per-endpoint calls`
+- `fix: use hsla instead of color-mix so html2canvas renders Arabic PDF export`
+- `test: add Playwright e2e verification for data, filters and Arabic exports`
+
 ---
 
 ## ⏭️ التالي
-- المرحلة 4: (بانتظار التعليمات).
+- المرحلة 5: (بانتظار التعليمات).
