@@ -1,6 +1,6 @@
 # 📊 تقرير المشروع — Report Generator
 
-> يُحدَّث بعد كل جلسة. آخر تحديث: 2026-07-12 (المرحلة 4)
+> يُحدَّث بعد كل جلسة. آخر تحديث: 2026-07-12 (المرحلة 5)
 
 ## نظرة عامة
 مولّد تقارير احترافي. Stack: **FastAPI + React + Shadcn/ui + TailwindCSS**.
@@ -141,7 +141,28 @@ OUT=./e2e-out node e2e/verify.mjs
 - `fix: use hsla instead of color-mix so html2canvas renders Arabic PDF export`
 - `test: add Playwright e2e verification for data, filters and Arabic exports`
 
+## ✅ المرحلة 5 — الاختبارات
+### أ) Backend — Unit Tests (Pytest + coverage)
+- **31 اختباراً ناجحاً**، تغطية **100%** (المطلوب 80%+).
+- ملفات: `test_api.py`, `test_crud_endpoints.py` (CRUD مُعامَل لكل الكيانات الخمسة + 404/422)،
+  `test_services.py` (خدمة `CRUDService` + `get_db`).
+- إعداد `pytest.ini` يفرض `--cov-fail-under=80`. أُضيف `pytest-cov` إلى `requirements.txt`.
+- التشغيل: `cd backend && pytest`
+
+### ب) Frontend — UI Tests (Playwright)
+- 6 اختبارات في `frontend/e2e/*.spec.ts` + `playwright.config.ts`:
+  تحميل Dashboard · بحث المبيعات · فلتر الفئة · تصدير Excel · تصدير PDF · الوضع الداكن.
+- التشغيل: `cd frontend && npx playwright test`
+  (أو إن كان `runner` يقتل الطرفية على Windows: شغّل الخوادم يدوياً ثم `PW_NO_SERVER=1 npx playwright test`).
+
+**ملاحظة تحقّق:** سكربت التحقق `frontend/e2e/verify.mjs` (متصفح Chromium حقيقي) نُفِّذ ونجح **7/7**
+ويغطي نفس السيناريوهات (Dashboard، الفلترة، تصدير PDF/Excel مع فحص العربية فعلياً، الوضع الداكن).
+
+### Commits (المرحلة 5)
+- `test: add comprehensive backend unit tests (100% coverage)`
+- `test: add Playwright UI tests (dashboard, filtering, export, dark mode)`
+
 ---
 
 ## ⏭️ التالي
-- المرحلة 5: (بانتظار التعليمات).
+- المرحلة 6: (بانتظار التعليمات).
